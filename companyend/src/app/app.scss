@@ -1,0 +1,340 @@
+/* Global styling for the Company End app */
+:root {
+    --bg: #f7f9fc;
+    --panel-bg: #ffffff;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    /* blue */
+    --accent-600: #1d4ed8;
+    --border: #e6e9ef;
+    --success: #16a34a;
+}
+
+.tabs {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+/* tab-btn base styles are defined later in the file to keep ordering predictable */
+
+/* layout display rules are applied on specific elements; stray display removed */
+
+.page-wrapper {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 18px;
+    align-items: start;
+    padding: 18px;
+}
+
+.sidebar {
+    position: sticky;
+    top: 22px;
+    gap: 24px;
+
+    /* .profile-tab & .post-tab size definitions moved to the bottom for consistency */
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        transition: transform .12s ease-in-out;
+        box-shadow: 0 10px 25px rgba(16, 24, 40, 0.08);
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        /* more breathing room */
+        margin-bottom: 16px;
+        width: 100%;
+    }
+
+    .sidebar textarea:focus {
+        outline: 0;
+        border-color: var(--accent-600);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.06);
+    }
+
+    .create-btn[aria-expanded='true'] {
+        background: var(--accent-600);
+    }
+
+    .sidebar input,
+    .sidebar textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}
+
+.sidebar button.create-btn {
+    width: 100%;
+    background: var(--accent);
+
+    .sidebar textarea {
+        resize: vertical;
+        min-height: 140px;
+        line-height: 1.5;
+    }
+
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sidebar .form-wrapper {
+    margin-top: 14px;
+
+    .sidebar .form-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+        width: 100%;
+    }
+
+    .sidebar .form-actions .btn {
+        flex: 1;
+    }
+
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.sidebar label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.sidebar input,
+.sidebar textarea {
+    /* Keep full-width & box-sizing defined earlier; apply font-size here */
+    font-size: 15px;
+}
+
+.sidebar textarea {
+    resize: vertical;
+    min-height: 160px;
+    line-height: 1.5;
+    padding: 12px 14px;
+}
+
+.sidebar .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.content {
+    flex: 1;
+}
+
+.content {
+    flex: 1;
+    display: inline-block;
+    width: 100%;
+    /* Expanded */
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 0;
+    font-weight: 600;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--muted);
+
+    .jobs-header {
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .jobs-title {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .meta-text {
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .job-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* Make the default buttons inside expanded content share equal width */
+    .btn {
+        flex: 1;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .job-card {
+        background: var(--panel-bg);
+        padding: 14px;
+        border-radius: 10px;
+
+        .btn {
+            width: auto;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border);
+    }
+
+    .job-card strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+
+    .job-meta {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .employer-link {
+        color: var(--accent);
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .employer-link:hover {
+        text-decoration: underline;
+    }
+
+    .job-date {
+        color: var(--muted);
+    }
+
+    .job-card.empty {
+        text-align: center;
+        color: var(--muted);
+        padding: 22px;
+    }
+
+    .job-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    @media (min-width: 860px) {
+        .job-list {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+}
+
+/* Tabs already configured earlier; duplicate definition removed */
+
+.tab-btn {
+    padding: 10px 12px;
+    /* consistent button padding */
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    width: 140px;
+    /* reduced length */
+    text-align: left;
+    /* align text to left */
+}
+
+.tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent-600);
+}
+
+.tab-btn+.tab-btn {
+    margin-top: 8px;
+    /* a bit more spacing between the stacked buttons */
+}
+
+/* Profile and post tabs sizes & alignment */
+.profile-tab {
+    width: 120px;
+    text-align: left;
+    padding-left: 12px;
+}
+
+.post-tab {
+    width: 140px;
+    text-align: left;
+    padding-left: 12px;
+}
+
+.sidebar label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sidebar input,
+.sidebar textarea {
+    font-size: 15px;
+}
+
+.create-btn,
+.btn.primary {
+    font-size: 18px;
+    padding: 14px 20px;
+    font-weight: 700;
+}
+
+.btn.secondary {
+    font-size: 15px;
+    padding: 12px 16px;
+}
+
+/* Make primary buttons in the sidebar expand and look prominent */
+.sidebar .btn.primary {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent-600);
+    font-weight: 700;
+}
+
+/* Ensure single-save profile button expands */
+.sidebar .form-wrapper .btn.primary {
+    width: 100%;
+}
+
+.job-card strong {
+    font-size: 18px;
+}
+
+.job-meta {
+    font-size: 14px;
+}
