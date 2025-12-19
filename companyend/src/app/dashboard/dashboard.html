@@ -1,0 +1,302 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>{{ currentCompany?.name }}</h2>
+            <p>Company Dashboard</p>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button (click)="reloadDashboard()" class="nav-item dashboard-link">
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </button>
+
+            <button [class.active]="activeTab === 'overview'" (click)="setActiveTab('overview')" class="nav-item">
+                <span class="nav-icon">📊</span>
+                Overview
+            </button>
+
+            <button [class.active]="activeTab === 'jobs'" (click)="setActiveTab('jobs')" class="nav-item">
+                <span class="nav-icon">💼</span>
+                Job Postings
+            </button>
+
+            <button [class.active]="activeTab === 'applications'" (click)="setActiveTab('applications')"
+                class="nav-item">
+                <span class="nav-icon">📋</span>
+                Applications
+            </button>
+
+            <button [class.active]="activeTab === 'analytics'" (click)="setActiveTab('analytics')" class="nav-item">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button (click)="logout()" class="logout-btn">
+                <span class="nav-icon">🚪</span>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="content-header">
+            <div class="profile-section" (click)="toggleProfileDropdown()" [class.active]="showProfileDropdown">
+                <div class="profile-avatar">
+                    <span class="avatar-icon">{{ getCompanyInitials() }}</span>
+                </div>
+                <div class="profile-info">
+                    <h3>{{ currentCompany?.name }}</h3>
+                    <p>Company Dashboard</p>
+                </div>
+                <div class="dropdown-arrow">
+                    <span [class.rotated]="showProfileDropdown">▼</span>
+                </div>
+
+                <!-- Profile Dropdown -->
+                <div *ngIf="showProfileDropdown" class="profile-dropdown">
+                    <div class="dropdown-item" (click)="viewProfile()">
+                        <span class="dropdown-icon">👤</span>
+                        View Profile
+                    </div>
+                    <div class="dropdown-item" (click)="editProfile()">
+                        <span class="dropdown-icon">⚙️</span>
+                        Edit Profile
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item logout-item" (click)="logout()">
+                        <span class="dropdown-icon">🚪</span>
+                        Logout
+                    </div>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>{{ getTabTitle() }}</h1>
+            </div>
+            <div class="header-actions">
+                <button *ngIf="activeTab === 'jobs'" (click)="showJobForm = true" class="primary-btn">
+                    + Post New Job
+                </button>
+            </div>
+        </div>
+
+        <!-- Overview Tab -->
+        <div *ngIf="activeTab === 'overview'" class="overview-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💼</div>
+                <div class="stat-content">
+                    <h3>{{ stats.totalJobs }}</h3>
+                    <p>Total Jobs</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <h3>{{ stats.activeJobs }}</h3>
+                    <p>Active Jobs</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-content">
+                    <h3>{{ stats.totalApplications }}</h3>
+                    <p>Total Applications</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-content">
+                    <h3>{{ stats.hiredCandidates }}</h3>
+                    <p>Hired Candidates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jobs Tab -->
+        <div *ngIf="activeTab === 'jobs'" class="jobs-section">
+            <div class="jobs-list">
+                <div *ngFor="let job of jobs" class="job-card">
+                    <div class="job-header">
+                        <h3>{{ job.title }}</h3>
+                        <span class="job-status" [class.active]="job.status === 'active'">
+                            {{ job.status }}
+                        </span>
+                    </div>
+
+                    <div class="job-details">
+                        <p class="job-location">📍 {{ job.location }}</p>
+                        <p class="job-ctc">💰 {{ job.ctc }}</p>
+                        <p class="job-type">{{ job.type }} • {{ job.experienceRequired }}</p>
+                    </div>
+
+                    <div class="job-stats">
+                        <span class="stat-item">
+                            👥 {{ getApplicationCount(job.id) }} applications
+                        </span>
+                        <span class="stat-item">
+                            📅 {{ job.createdAt | date:'shortDate' }}
+                        </span>
+                    </div>
+
+                    <div class="job-actions">
+                        <button (click)="viewJobDetails(job)" class="secondary-btn">View Details</button>
+                        <button (click)="editJob(job)" class="secondary-btn">Edit</button>
+                        <button (click)="toggleJobStatus(job)" class="danger-btn">
+                            {{ job.status === 'active' ? 'Close' : 'Reopen' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Tab -->
+        <div *ngIf="activeTab === 'applications'" class="applications-section">
+            <div class="applications-list">
+                <div *ngFor="let application of applications" class="application-card">
+                    <div class="application-header">
+                        <h4>{{ application.applicantName }}</h4>
+                        <span class="application-status" [class]="application.status">
+                            {{ application.status }}
+                        </span>
+                    </div>
+
+                    <div class="application-details">
+                        <p>📧 {{ application.applicantEmail }}</p>
+                        <p>💼 {{ getJobTitle(application.jobId) }}</p>
+                        <p>📅 Applied: {{ application.appliedAt | date:'short' }}</p>
+                    </div>
+
+                    <div class="application-actions">
+                        <button (click)="viewApplicationDetails(application)" class="secondary-btn">
+                            View Details
+                        </button>
+                        <select [value]="application.status" (change)="updateApplicationStatus(application.id, $event)"
+                            class="status-select" aria-label="Application Status">
+                            <option value="applied">Applied</option>
+                            <option value="shortlisted">Shortlisted</option>
+                            <option value="interviewed">Interviewed</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="hired">Hired</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div *ngIf="activeTab === 'analytics'" class="analytics-section">
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Application Trends</h3>
+                    <div class="chart-placeholder">
+                        <p>📈 Application trends chart would go here</p>
+                        <p>New applications this week: {{ stats.newApplications }}</p>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <h3>Job Performance</h3>
+                    <div class="chart-placeholder">
+                        <p>📊 Job performance metrics would go here</p>
+                        <p>Conversion rate: {{ getConversionRate() }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Form Modal -->
+    <div *ngIf="showJobForm" class="modal-overlay" (click)="showJobForm = false">
+        <div class="modal-content job-form-modal" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ editingJob ? 'Edit Job' : 'Post New Job' }}</h2>
+                <button (click)="showJobForm = false" class="close-btn">&times;</button>
+            </div>
+
+            <form (ngSubmit)="saveJob()" #jobForm="ngForm" class="job-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Job Title *</label>
+                        <input type="text" [(ngModel)]="jobFormData.title" name="title" required
+                            placeholder="e.g. Senior Software Engineer" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Job Type *</label>
+                        <select [(ngModel)]="jobFormData.type" name="type" required class="form-input"
+                            aria-label="Job Type">
+                            <option value="full-time">Full Time</option>
+                            <option value="part-time">Part Time</option>
+                            <option value="contract">Contract</option>
+                            <option value="internship">Internship</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Job Description *</label>
+                    <textarea [(ngModel)]="jobFormData.description" name="description" required rows="4"
+                        placeholder="Detailed job description, responsibilities, and requirements..."
+                        class="form-input">
+                    </textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Location *</label>
+                        <input type="text" [(ngModel)]="jobFormData.location" name="location" required
+                            placeholder="e.g. New York, NY or Remote" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>CTC/Salary *</label>
+                        <input type="text" [(ngModel)]="jobFormData.ctc" name="ctc" required
+                            placeholder="e.g. $80,000 - $120,000" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Experience Required *</label>
+                        <input type="text" [(ngModel)]="jobFormData.experienceRequired" name="experienceRequired"
+                            required placeholder="e.g. 3-5 years" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Application Deadline</label>
+                        <input type="date" [(ngModel)]="jobFormData.applicationDeadline" name="applicationDeadline"
+                            class="form-input" aria-label="Application Deadline">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Skills Required</label>
+                    <input type="text" [(ngModel)]="jobFormData.skillsInput" name="skillsInput"
+                        placeholder="e.g. JavaScript, React, Node.js (comma separated)" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Requirements</label>
+                    <textarea [(ngModel)]="jobFormData.requirementsInput" name="requirementsInput" rows="3"
+                        placeholder="Specific requirements or qualifications..." class="form-input">
+                    </textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" (click)="showJobForm = false" class="secondary-btn">Cancel</button>
+                    <button type="submit" [disabled]="!jobForm.valid" class="primary-btn">
+                        {{ editingJob ? 'Update Job' : 'Post Job' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

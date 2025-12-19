@@ -1,0 +1,85 @@
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your company dashboard</p>
+        </div>
+
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" [(ngModel)]="loginData.email" name="email" required email
+                    placeholder="company@example.com" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" [(ngModel)]="loginData.password" name="password" required
+                    placeholder="Enter your password" class="form-input">
+            </div>
+
+            <button type="submit" [disabled]="!loginForm.valid || isLoading" class="login-btn">
+                <span *ngIf="isLoading">Signing in...</span>
+                <span *ngIf="!isLoading">Sign In</span>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <p>Don't have an account?
+                <button (click)="toggleRegister()" class="link-btn">Register here</button>
+            </p>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div *ngIf="showRegister" class="modal-overlay" (click)="showRegister = false">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Register Your Company</h2>
+                <button (click)="showRegister = false" class="close-btn">&times;</button>
+            </div>
+
+            <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="register-form">
+                <div class="form-group">
+                    <label for="regName">Company Name</label>
+                    <input type="text" id="regName" [(ngModel)]="registerData.name" name="name" required
+                        placeholder="Your Company Name" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" [(ngModel)]="registerData.email" name="email" required email
+                        placeholder="company@example.com" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" [(ngModel)]="registerData.password" name="password" required
+                        minlength="6" placeholder="Minimum 6 characters" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="regDescription">Company Description (Optional)</label>
+                    <textarea id="regDescription" [(ngModel)]="registerData.description" name="description" rows="3"
+                        placeholder="Brief description of your company" class="form-input">
+                    </textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="regWebsite">Website (Optional)</label>
+                    <input type="url" id="regWebsite" [(ngModel)]="registerData.website" name="website"
+                        placeholder="https://yourcompany.com" class="form-input">
+                </div>
+
+                <button type="submit" [disabled]="!registerForm.valid || isLoading" class="register-btn">
+                    <span *ngIf="isLoading">Creating Account...</span>
+                    <span *ngIf="!isLoading">Create Account</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

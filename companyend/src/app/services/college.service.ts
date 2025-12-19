@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { College } from '../models/college.model';
-import { Job } from '../models/job.model';
+import { Job } from '../models/company.model';
 
 @Injectable({ providedIn: 'root' })
 export class CollegeService {
